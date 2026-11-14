@@ -1,0 +1,3 @@
+# Office inquiries — future increment
+
+This folder is intentionally documentation-only in the first local slice. Do not add a client-side fake message form that implies private messaging works. Before implementing inquiries, the team must decide authentication, trusted role/department provisioning, requester/department access boundaries, backend writes, validation/length limits, retention, abuse handling, tests for unrelated-user denial, and an online/local deployment boundary. The intended concept is routine one-to-one service inquiry only—not emergency, counseling, complaint, or confidential reporting.

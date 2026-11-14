@@ -1,28 +1,25 @@
-﻿# MPC SAFARI — AI and Team Context
+# MPC SAFARI — AI and Team Context
 
 ## Purpose
-One modular web-based campus system for MPC stakeholders. The central direction is a campus-services information hub with approved public service information and announcements, plus a limited signed-in one-to-one office inquiry feature for routine questions.
+One modular web-based campus system for MPC stakeholders. Current runnable slice: campus information hub with fictional public service examples and announcements, backed by a local Express API and SQLite demo database.
 
 ## Current stage
-Beginner team learning web development from a Vite + React + JavaScript starter. Work locally first. The project is not an MPC-approved or production system. Do not claim features exist until implemented and tested.
+Beginner team learning from a React + Vite frontend, Node + Express local API, and SQLite demo database. This is a local educational reference, not MPC-approved or production-ready. Authentication and office inquiry writes are intentionally not implemented yet.
 
 ## Evidence and approval limits
-Existing discovery includes three student interviews dated November 4, 2026. This small sample is not proof of campus-wide prevalence, causes, or system impact. Survey and Dean/OSA letters are drafts. Do not distribute surveys, collect real data, or imply approval unless the required written approvals have actually been granted.
+Discovery includes three student interviews dated November 4, 2026. This is a small sample and not proof of campus-wide prevalence, causes, or impact. Survey and Dean/OSA letters are drafts. Do not distribute surveys, collect real data, or imply approval unless the required written approvals actually exist.
 
-## Demo data and safety
-Use fictional demo content only. Never commit passwords, API keys, real student records, private messages, or sensitive information. Public service facts need a source or a clear unverified label.
+## Data and security
+Use fictional demo content only. Never commit passwords, API keys, real student records, private messages, or sensitive information. Clearly label unknown service facts. This local API is read-only and not suitable for online deployment.
 
-## Architecture direction
-Use one React web app, with reusable components and feature folders. Keep UI, feature behavior, data access, authentication, and authorization as separate responsibilities as the project grows. Do not add a database or backend until the team understands the current front end and has agreed on the next step.
+## Architecture
+React components call `src/data/api.js`. The API routes call repository functions. Repository functions query SQLite. Keep UI, feature behavior, data access, authentication, and authorization responsibilities separated as the project grows. Do not add a real provider/backend or paid hosting without a team/account-owner decision.
 
-## Initial design direction
-Modern, vibrant technology feel using blue, black, gray, and white. The student team will customize the visual design.
+## Design and teamwork
+Modern vibrant technology direction: blue, black/navy, gray, and white. The team will customize it. Use small changes, feature branches, PRs, peer review, and commits. Assign one accountable owner per feature area; coordinate shared-file edits.
 
 ## Future modules
-Enrollment assistance, queues, document requests, student support/reporting, learning tools, wayfinding, analytics, and AI are future ideas. Do not implement sensitive or institution-linked features without a separate design and approval gate.
+Office inquiry, authentication, staff editing, enrollment, queues, documents, student support/reporting, learning tools, wayfinding, analytics, and AI are future increments. Review actual Python programs and course constraints before selecting port/service/defer.
 
-## Team workflow
-Use small changes, branches, pull requests, peer review, and commits. Explain new files and commands in beginner-friendly language. One owner per feature/file area; coordinate before editing shared files.
-
-## Instructions to any assisting AI
-First inspect the files that already exist. Explain what you will change before making broad structural changes. Do not overwrite working files blindly. Prefer small, runnable steps, document decisions and limitations, and report tests actually run. Keep this file updated when the agreed project direction changes.
+## Instructions to assisting AI
+Inspect files first. Explain changes in beginner-friendly steps. Do not overwrite working files blindly. Keep commands specific to Windows PowerShell when guiding this team. Report tests actually run and maintain the distinction between implemented, demo-only, planned, and approval-gated work.
