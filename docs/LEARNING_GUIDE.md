@@ -1,5 +1,7 @@
 # Learning Guide — Follow One Request
 
+**Current update:** the app now includes local demo accounts, roles, a signed-in feed, SQLite-backed tickets, and a staff workspace. See `PROTOTYPE_MODULES.md` and the root `README.md` for the current workflow; older introductory examples below are starting points, not a list of missing features.
+
 ## What happens when the page loads?
 
 1. The browser reads `index.html`. Its `root` element is an empty container where React will draw the app.
@@ -24,7 +26,7 @@ A single file can be a useful first experiment, but a project grows easier to ch
 4. In `tests/contentRepository.test.js`, add an assertion that confirms the service count changes as expected.
 5. Change a CSS variable and observe the preview. Try keyboard Tab navigation and verify focus is visible.
 6. Explain why the browser calls the API rather than opening the SQLite file itself.
-7. Before adding login, write down who may read and write each record and create denied-access tests.
+7. Read `server/security/authorization.js` and `tests/workflows.test.js`; explain how the API denies an unauthorized account even if a user manually calls an endpoint.
 
 ## Git concepts by analogy
 

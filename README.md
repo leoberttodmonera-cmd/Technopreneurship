@@ -1,85 +1,71 @@
-# MPC SAFARI — Local Learning Starter
+# MPC SAFARI — Complete Local Learning Prototype
 
-**Status:** educational local reference starter for a student team. It contains a React/Vite web client, a local Express API, and a SQLite database populated with fictional examples. It is not MPC-approved, not connected to any MPC system, and not production-ready.
+This is a modular, local learning prototype for a proposed campus services hub. It includes a React/Vite web client, Express API, SQLite database, fictional student and staff accounts, a signed-in feed, private office ticket workflows, tests, and learning documentation. It is **not MPC-approved, not connected to MPC systems, and not production-ready**.
 
-## What the pieces do
+## Run it on Windows
 
-- `src/` is the browser application. React builds the page from components; Vite serves it locally and refreshes the page after edits.
-- `server/` is a separate Node/Express process. It exposes read-only JSON endpoints for the current demo services and announcements.
-- `server/db/` creates a local SQLite database file the first time the API starts and inserts clearly fictional demo content.
-- `server/repositories/` holds database queries, keeping SQL out of the UI.
-- `src/data/api.js` is the frontend's API client; it requests `/api/...` instead of directly opening the database.
-- `docs/` explains architecture, learning steps, security boundaries, and future module intake.
-
-This is a complete **first vertical slice**, not the full institutional system. Authentication, staff editing, one-to-one message threads, and future modules are described but intentionally not enabled yet. They require a designed and tested authorization model. Do not add sensitive or real student data.
-
-## Requirements
-
-Install Node.js 22.12+ (Node 24 is also expected to work with Vite 8) and Git. On Windows PowerShell, use `npm.cmd` if the `npm` PowerShell shortcut is blocked by execution policy. Do not change the computer's script-execution policy just for this project.
-
-## Start the app
-
-Open a terminal at the project root (the folder containing `package.json`) and run:
+Requirements: Node.js 22.12+ (Node 24 is expected to work) and Git. If PowerShell blocks `npm`, use `npm.cmd`; do not change the computer's script policy for this project.
 
 ```powershell
 npm.cmd install
 npm.cmd run dev
 ```
 
-The terminal starts two named processes. Open the printed Vite URL, usually `http://127.0.0.1:5173/`. The API listens locally at `http://127.0.0.1:3001`; its health endpoint is `/api/health`. Keep the terminal open while using the preview. Saving source files refreshes the page. `localhost` is reachable on your own computer; it is not a public/classmate URL.
-
-Stop both processes with **Ctrl+C** in that terminal. To restart, run `npm.cmd run dev` again. The demo database stays local in `server/data/mpc-safari-demo.sqlite` and is ignored by Git. Delete that file only when the API server is stopped if you want the demo seed to regenerate.
-
-## Useful commands
+Open the Vite URL shown in the terminal, usually `http://127.0.0.1:5173/`. Vite starts the React frontend and local Express API together. Keep the terminal open while using the site; stop with **Ctrl+C**.
 
 ```powershell
-npm.cmd test       # run the SQLite/content tests
-npm.cmd run build  # produce the static frontend in dist/
-npm.cmd run check  # tests, then frontend production build
+npm.cmd test
+npm.cmd run build
+npm.cmd run check
 ```
 
-Expected local API responses: `GET /api/services` returns six fictional service cards; `GET /api/announcements` returns two fictional updates. All locations and updates are marked as examples.
+`npm.cmd run check` runs tests and builds the frontend. The API listens on local port 3001 behind Vite's `/api` proxy. The database is created at `server/data/mpc-safari-demo.sqlite`; it is ignored by Git. The schema setup adds missing tables/columns to the earlier starter database without deleting your demo data.
 
-## Git and teamwork, briefly
+## Fictional test accounts
 
-- **Clone** once to make a working copy on a computer.
-- **Pull** before starting so you receive teammates' newest committed changes.
-- A **branch** is a safe lane for one task.
-- A **commit** is a named local checkpoint.
-- **Push** sends your branch/commits to GitHub.
-- A **pull request** asks teammates to review your change before it joins `main`.
+| Role | Email | Password | Access |
+| --- | --- | --- | --- |
+| Student | `student@example.test` | `StudentDemo123!` | Public content, signed-in feed, own tickets/replies |
+| Registrar demo staff | `staff@example.test` | `StaffDemo123!` | Registrar tickets, replies/status changes, demo announcements |
 
-Typical flow after the repository is initialized:
+Students can also create accounts from the Account page. Registration always creates a `student`; there is no public staff registration. These test credentials are seeded into the local SQLite file for learning only. Do not reuse real passwords or add real people/data.
 
-```powershell
-git pull
-git switch -c feature/my-small-task
-# edit and save files
-git status
-git add src
-git commit -m "Describe the change"
-git push -u origin feature/my-small-task
-```
+## What is connected
 
-Open a Pull Request on GitHub. Do not edit the same shared file as a teammate without coordinating. GitHub is not live collaborative editing; VS Code Live Share is optional for real-time co-editing. Never commit secrets or real/sensitive records.
+- **Public content:** public service directory, department grouping, public announcements served by Express from SQLite.
+- **Accounts:** student registration, sign-in, sign-out and current-user endpoint. Passwords are stored as Node `scrypt` hashes, not plaintext. Opaque session tokens are held in server memory and sent in `HttpOnly; SameSite=Lax` cookies; sessions end when the API restarts or expire.
+- **Student feed:** signed-in users can read public and `signed_in` announcements. Students cannot publish official posts.
+- **Tickets:** signed-in students submit service inquiries to a department selected from a service. SQLite stores ticket records and replies. Students can see only their tickets; department staff can see only tickets assigned to their department. Staff may reply and change ticket status.
+- **Office publishing:** signed-in staff can publish a fictional public or student-audience announcement for their assigned department. The API checks the role; hiding the control in the UI is not the security boundary.
+- **Tests:** API-level tests cover public vs protected content, account creation, ticket ownership/department scope, staff authorization, replies/status and announcement visibility.
 
-## Suggested four-person starting split
+## Folder map
 
-1. **App shell/integration:** `src/app/`, navigation and top-level composition. Coordinate shared contracts.
-2. **Campus information:** `src/features/campus-services/` and service content presentation.
-3. **Announcements/content:** `src/features/announcements/`; keep sample facts fictional until verified/approved.
-4. **Platform/testing/docs:** `server/`, `tests/`, and `docs/`; coordinate backend changes with the app/API owner. Each role should review another person's PR.
+- `src/app/` composes app views and navigation.
+- `src/components/` contains shared navigation/header components.
+- `src/features/` holds separate campus service, department, feed, account, student ticket and staff-workspace components.
+- `src/data/api.js` is the frontend's HTTP boundary; React never queries SQLite directly.
+- `server/routes/` validates requests and applies access guards.
+- `server/security/` contains password hashing, local session handling and role guards.
+- `server/repositories/` holds SQL queries and domain persistence operations.
+- `server/db/` initializes/migrates schema and fictional seed data.
+- `tests/` exercises database/API rules.
+- `docs/` contains architecture, learning, team, security, integration and prototype guidance.
 
-This split is a starting suggestion. Rotate roles so all members understand how a browser request reaches the database.
+## Data flow example: student ticket
 
-## Data and approval safeguards
+1. The student submits the form in `src/features/office-inquiries/TicketDesk.jsx`.
+2. `src/data/api.js` sends JSON to `POST /api/tickets` using the current same-origin cookie.
+3. The Express route checks sign-in, student role and field length.
+4. `server/repositories/workflowRepository.js` finds the chosen service's department, inserts the ticket and first message in SQLite.
+5. On later reads, SQL restricts student results by account ID or staff results by assigned department.
 
-Never use real MPC/student data in this local starter. Never commit passwords, API keys, private messages, grades, health/counseling details, or student identifiers. Public factual content requires an approved source; otherwise label it as unverified. The survey and Dean/OSA letters remain drafts until the required reviewers approve them in writing. A local demo is not institutional approval or deployment.
+## Boundaries and remaining limits
 
-## Next learning increments
+This is a local classroom prototype. Session records exist only in server memory; restarting the API signs everyone out. It has no email verification, password reset, account moderation, brute-force throttling, CSRF token strategy, audit log, attachment scanning, encryption-at-rest policy, backup/restore process, legal/privacy approval, or production deployment configuration. Do not use sensitive details, actual student accounts, or confidential case descriptions. Student-feed/public announcements are fictional. Real MPC facts require approval and verification. No paid hosting or services are assumed.
 
-1. Change a fictional service card and trace it through SQLite → repository → Express route → frontend API client → React component.
-2. Add an API validation test and an accessible form.
-3. Design roles and denied-access tests before implementing authentication or inquiries.
-4. Review each Advance Programming/Python assignment separately before deciding to port it, wrap it as a bounded service, or keep it as a separate coursework artifact.
-5. Choose a real staging/backend provider only after the team's no-budget and account-owner rules are known. Any billing requirement is a stop-and-approve gate.
+The local sign-in flow is included to demonstrate architecture and role checks. It is not a statement that the product is institutionally approved or safe to operate with real student data. Have advisers/professionals review it before any real use.
+
+## Git collaboration
+
+After edits: `git status`, `git add <files>`, `git commit -m "Describe change"`, then `git push`. Pull before starting a teammate's work. Prefer branches and pull requests; coordinate shared files. Public repositories expose pushed files. Never commit local databases, secrets, real records or personal messages. `.gitignore` excludes dependencies, build output and local SQLite data.

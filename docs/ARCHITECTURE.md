@@ -1,21 +1,21 @@
-# Architecture — Local Learning Starter
+# Architecture — Local Learning Prototype
 
 ## Current runnable slice
 
 ```text
-Browser (React components)
-   │ fetch('/api/services') / fetch('/api/announcements')
+Browser (React feature components)
+   │ JSON requests + HttpOnly session cookie
    ▼
 Vite development server (port 5173; proxies /api)
    │ HTTP on this computer only
    ▼
 Express API (port 3001)
-   │ route → repository function
+   │ session middleware → role/ownership checks → repositories
    ▼
 SQLite local demo database (server/data/mpc-safari-demo.sqlite)
 ```
 
-Vite and the API run as two processes with `npm run dev`. Vite's proxy keeps frontend requests same-origin during development. The browser does not open SQLite directly. The API queries the database through repository functions, and routes return JSON.
+Vite and the API run as two processes with `npm.cmd run dev`. Vite's proxy keeps frontend requests same-origin during development. The browser does not open SQLite directly. Public reads, student registration/login, the signed-in feed, ticket conversations, staff status/replies and staff announcements use the API and SQLite.
 
 ## Folder boundaries
 
@@ -32,9 +32,9 @@ Vite and the API run as two processes with `npm run dev`. Vite's proxy keeps fro
 
 ## Key responsibilities
 
-The UI displays information and captures input. It is not a security control. A future signed-in action must carry trusted actor identity to a backend that checks the actor, department, record and action. Hiding a button is insufficient. This starter has no login, role provisioning, content editing, or private inquiries; do not imply that it does.
+The UI displays information and captures input. It is not a security control. The API derives identity from its session manager and checks role, ticket owner and department. Hiding a button is insufficient. Student self-registration cannot select staff role; staff is seeded for the local demo.
 
-SQLite is used only as a local, zero-hosting-cost learning database. It is not the eventual institutional data architecture decision. Its file is generated locally and is not committed. The current API is read-only to avoid creating an unauthenticated write surface.
+SQLite is used only as a local, zero-hosting-cost learning database. It is not the eventual institutional data architecture decision. Its file is generated locally and is not committed. Passwords use scrypt hashes; opaque sessions live only in API memory and end on restart. Review `SECURITY_AND_LIMITATIONS.md`; this is not production-ready.
 
 ## Module contract
 
